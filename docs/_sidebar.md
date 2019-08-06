@@ -18,18 +18,24 @@
         -   [Grid](CSS/DevelopMe_/css-grid.md)
         -   [Specificity](CSS/DevelopMe_/css-specificity.md)
         -   [Advanced CSS](CSS/DevelopMe_/more-advanced-css.md)
-    -   [Flex]('CSS/flex.md')
-    -   [Grid]('CSS/grid.md')
+    -   [Flex](CSS/flex.md)
+    -   [Grid](CSS/grid.md)
 
 -   SASS
     -    DevelopMe_
-        -   [SASS](css/sass.md)
-    -   [Mixins]('css/mixins.md')
-    -   [Extends]('css/extends.md')
+        -   [SASS](SASS/sass.md)
+    -   [Mixins](SASS/mixins.md)
+    -   [Extends](SASS/extends.md)
 
 -   PHP
-    -   [Databases](php/databases.md)
+    -   [Databases](PHP/databases.md)
 
 -   JavaScript
-    -   [Arrays](javascript/arrays.md)
-    -   [Objects](javascript/objects.md)
+    -   [Functions](JavaScript/functions.md)
+    -   [Arrays](JavaScript/arrays.md)
+    -   [Objects](JavaScript/objects.md)
+
+-   Tooling
+    -   DevelopMe_
+        -   [Git and GitHub](Tooling/DevelopMe_/git-github.md)
+        -   [NPM and Gulp](Tooling/DevelopMe_/npm-gulp.md)
