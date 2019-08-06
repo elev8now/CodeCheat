@@ -51,22 +51,15 @@
                 repo: 'Cheatsheet',
                 loadSidebar: true,
                 search: 'auto', // default
-                search: [
-                    '/', // => /README.md
-                    '/guide', // => /guide.md
-                    '/get-started', // => /get-started.md
-                    '/zh-cn/', // => /zh-cn/README.md
-                ],
 
                 // complete configuration parameters
                 search: {
                     maxAge: 86400000, // Expiration time, the default one day
-                    paths: [], // or 'auto'
+                    paths: 'auto', // or 'auto'
                     placeholder: 'Type to search',
 
                     // Localization
                     placeholder: {
-                        '/zh-cn/': '搜索',
                         '/': 'Type to search'
                     },
 
@@ -74,12 +67,11 @@
 
                     // Localization
                     noData: {
-                        '/zh-cn/': '找不到结果',
                         '/': 'No Results'
                     },
 
                     // Headline depth, 1 - 6
-                    depth: 2,
+                    depth: 6,
 
                     hideOtherSidebarContent: false, // whether or not to hide other sidebar content
 
