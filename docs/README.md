@@ -1,1 +1,1 @@
-# CodeCheat - Jonathan's Coding Cheatsheet
+# Jonathan's Coding Cheatsheet
