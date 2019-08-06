@@ -10,7 +10,7 @@
         <link href="https://fonts.googleapis.com/css?family=Fira+Code:400,700|Fira+Sans:300,400,700&display=swap" rel="stylesheet">
         <style media="screen">
             body {
-                font-family: Fira Code,Monaco,courier,monospace;
+                font-family: Fira Sans,Source Sans Pro,Helvetica Neue,Arial,sans-serif;
             }
             code {
                 font-family: Fira Code,Monaco,courier,monospace;
@@ -40,6 +40,10 @@
                 font-weight: bold;
                 position: relative;
                 top: -1px;
+            }
+            .markdown-section pre {
+                overflow: hidden;
+                white-space: pre-wrap;
             }
         </style>
     </head>
@@ -74,7 +78,7 @@
                     },
 
                     // Headline depth, 1 - 6
-                    depth: 4,
+                    depth: 2,
 
                     hideOtherSidebarContent: false, // whether or not to hide other sidebar content
                 },
@@ -92,6 +96,5 @@
         <script src="//unpkg.com/prismjs/components/prism-php.min.js"></script>
         <script src="//unpkg.com/docsify/lib/plugins/search.min.js"></script>
         <script src="//unpkg.com/docsify-copy-code@2"></script>
-        <script src="//unpkg.com/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js">
     </body>
 </html>

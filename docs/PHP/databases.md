@@ -2,7 +2,7 @@
 
 ## Queries
 
-### Show databases
+### Show
 
 ```bash
 mysql> SHOW DATABASES;
