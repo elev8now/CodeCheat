@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Document</title>
+        <title>CodeCheat</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <meta name="description" content="Description">
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -50,28 +50,33 @@
                 name: 'CodeCheat',
                 repo: 'CodeCheat',
                 loadSidebar: true,
-                subMaxLevel: 4,
+                alias: {
+                    '/.*/_sidebar.md': '/_sidebar.md',
+                },
+                subMaxLevel: 3,
                 search: 'auto', // default
-
                 // complete configuration parameters
                 search: {
                     maxAge: 86400000, // Expiration time, the default one day
                     paths: 'auto', // or 'auto'
                     placeholder: 'Type to search',
+
+                    // Localization
                     placeholder: {
                         '/': 'Type to search'
                     },
+
                     noData: 'No Results!',
+
                     // Localization
                     noData: {
                         '/': 'No Results'
                     },
+
                     // Headline depth, 1 - 6
-                    depth: 6,
-                    // whether or not to hide other sidebar content
-                    hideOtherSidebarContent: false,
-                    // To avoid search index collision between multiple websites under the same domain
-                    namespace: 'CodeCheat'
+                    depth: 4,
+
+                    hideOtherSidebarContent: false, // whether or not to hide other sidebar content
                 },
                 logo: '/_media/logo.png',
                 // docsify-copy-code (defaults)
@@ -86,6 +91,7 @@
         <script src="//unpkg.com/prismjs/components/prism-bash.min.js"></script>
         <script src="//unpkg.com/prismjs/components/prism-php.min.js"></script>
         <script src="//unpkg.com/docsify/lib/plugins/search.min.js"></script>
-        <script src="https://unpkg.com/docsify-copy-code@2"></script>
+        <script src="//unpkg.com/docsify-copy-code@2"></script>
+        <script src="//unpkg.com/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js">
     </body>
 </html>
