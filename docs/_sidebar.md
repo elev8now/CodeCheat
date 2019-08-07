@@ -1,4 +1,2 @@
 * [PHP](php.md)
-
-* [Home](/)
-* [Guide](php.md)
+* [MySQL](mysql.md)
