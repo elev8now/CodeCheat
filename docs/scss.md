@@ -4,7 +4,7 @@
 
 Using **mixins** for vendor prefixes
 
-```scss
+```scss 
 // At this point, the mixin function isn't doing anything. You have to call it when writing our SCSS, and pass a value to it.
 @mixin border-radius($radius) {
   -webkit-border-radius: $radius;
