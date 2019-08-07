@@ -1,6 +1,6 @@
 ## Databases
 
-#### Queries
+### Queries
 
 #### Show
 
