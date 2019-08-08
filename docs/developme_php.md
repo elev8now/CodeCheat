@@ -1840,9 +1840,9 @@ if (isset($_SESSION['logged_in'])){
 
 ```php
 <?php
-setcookie ( $name, $value, $expire);
+setcookie($name, $value, $expire);
 
-setcookie ( 'logged_in', 'YES', time()+3600);
+setcookie('logged_in', 'YES', time()+3600);
 
 if ('YES' == $_COOKIE['logged_in']){
     echo 'Welcome to your account!';
