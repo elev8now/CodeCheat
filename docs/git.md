@@ -86,6 +86,10 @@ git push
 
 Then go to GitHub to see that the change is reflected there.
 
+* * *
+
+## Git Commands
+
 ```bash
 git init
 ```
