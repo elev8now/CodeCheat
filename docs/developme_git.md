@@ -170,9 +170,9 @@ Reduces requests over network, increases speed and efficiency, allows working of
 
 ## Git Terminology
 
-#### repository / repoproject
-
-files and a versioning database, in our example this is hosted on GitHub, but can be hosted on any Git server or your local machine
+#### repository / repo
+ 
+Project files and a versioning database, in our example this is hosted on GitHub, but can be hosted on any Git server or your local machine
 
 #### fetch
 
