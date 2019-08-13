@@ -1,87 +1,87 @@
-# Git Cheatsheet 
+# Git Cheatsheet
 
 ## Git Terminology
 
-#### repository / repo
- 
+### repository / repo
+
 Project files and a versioning database, in our example this is hosted on GitHub, but can be hosted on any Git server or your local machine
 
-#### fetch
+### fetch
 
 fetching file versions and information from central repository server, e.g. GitHub
 
-#### checkout
+### checkout
 
 switch your project directory to a certain version of the project, replaces version managed files with the versions from this point in time
 
-#### commit
+### commit
 
 create a point in time version of the current state of the project files
 
-#### push
+### push
 
-push your snapshots (work), to the central project repository, to allow other people to pull and checkout your changes
+push your snapshots (work), to the central project repository, to allow other people to pull and checkout your changes
 
-#### pull
+### pull
 
 pulling down from the central project repository and updating the branch you are working on
 
-* * *
+---
 
 ## Initialise new repository
 
 Go to GitHub.com and create new respository.
 
-#### Option 1: first commit on GitHub
+### Option 1: first commit on GitHub
 
 Note: Remember to initialise remote repo with README.md
 
 ```bash
 # run as separate commands
-$ git init
-$ git remote add origin {repository URL, starts git@github.com….}
-$ git fetch
-$ git checkout master
-$ git add {filename}
-$ git commit -m "adding my first file"
-$ git push
+git init
+git remote add origin {repository URL, starts git@github.com….}
+git fetch
+git checkout master
+git add {filename}
+git commit -m "adding my first file"
+git push
 ```
 
-#### Option 2: first commit on your computer
+### Option 2: first commit on your computer
 
-Note: If you choose this option, the remote repo must be **empty**. The remote repo must be initialised **without** a README.md. 
+Note: If you choose this option, the remote repo must be **empty**. The remote repo must be initialised **without** a README.md.
 
 ```bash
 # run as separate commands
-$ git init
-$ git remote add origin git@github.com:elev8now/{repo name}.git
-$ git add {filename}
-$ git commit -m "first commit"
-$ git push -u origin master
+git init
+git remote add origin git@github.com:elev8now/{repo name}.git
+git add {filename}
+git commit -m "first commit"
+git push -u origin master
 ```
 
-### Editing files
+## Editing files
 
-#### Edit, commit, push
+### Edit, commit, push
 
-1.  Make a change to your files
+1. Make a change to your files
 
-2.  Run the following in command line to stage that change:
+2. Run the following in command line to stage that change:
 
 ```bash
-$ git add {filename}
+git add {filename}
 ```
 
-3.  Then commit it with:
+3. Then commit it with:
 
 ```bash
-$ git commit -m "some message"
+git commit -m "some message"
 ```
 
-4.  Finally, push your commit(s) to GitHub:
+4. Finally, push your commit(s) to GitHub:
 
 ```bash
-$ git push
+git push
 ```
 
 Then go to GitHub to see that the change is reflected there.
