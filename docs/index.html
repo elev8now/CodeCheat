@@ -56,6 +56,12 @@
             .app-sub-sidebar li::before {
                 content: '\0029BF' !important;
             }
+            .content {
+                padding-top: 0;
+            }
+            .cover-main img {
+                max-width: 300px;
+            }
         </style>
     </head>
     <body>
@@ -64,6 +70,7 @@
             window.$docsify = {
                 name: 'CodeCheat',
                 repo: 'CodeCheat',
+                coverpage: true,
                 loadSidebar: true,
                 alias: {
                     '/.*/_sidebar.md': '/_sidebar.md',
