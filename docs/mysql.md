@@ -137,3 +137,22 @@ The **DELETE** statement is used to delete existing records in a table.
 # delete rows with id greater than 4
 DELETE FROM `users` WHERE `id` > 4;
 ```
+
+### Database Dump
+
+1. `vagrant ssh` into virtual machine (box)
+2. Run `cd /var/www/public` to navigate into your root directory
+3. Dump the database with `mysqldump -u root -proot {database name} > database.sql` 
+4. Open `database.sql` in your code editor to check the database dump worked correctly
+5. `cd` back to root directory 
+6. If required, destroy the virtual machine (box) with `vagrant destroy` from within the directory, 
+7. or globally using the box id, found with `vagrant global-status` and `vagrant destroy {id}`
+
+### Rebuild Database
+
+1. Copy all project files into new directory
+2. Copy `database.sql` file into `public` folder
+3. Make sure `vagrantfile` exists in root directory 
+4. Run `vagrant up` to initialise new virtual machine (box)
+5. `vagrant ssh` into virtual machine (box)
+6. Rebuild the database with `mysql -u root -proot {database name} < database.sql` 
