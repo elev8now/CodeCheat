@@ -7,13 +7,13 @@
 CodeCheats provides quick and easy access to coding tips and tricks for multiple coding languages and tooling processes, including: 
 - HTML
 - CSS
-- [SASS (SCSS)](scss.md)
+- [SASS](scss.md)
 - JavaScript
 - [PHP](php.md)
-- [MySQL](mysql.md) (databases)
-- Bash
+- [MySQL](mysql.md)
+- [Terminal](terminal.md)
 - [Git](git.md)
-- Gulp
+- [Gulp](gulp.md)
 
 ### Features
 - New code added regularly

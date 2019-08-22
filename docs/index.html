@@ -11,16 +11,38 @@
         <style media="screen">
             body {
                 font-family: Fira Sans,Source Sans Pro,Helvetica Neue,Arial,sans-serif;
+                background-color: #282934;
+                color: #fff !important;
+                font-size: 14px;
             }
-            code {
-                font-family: Fira Code,Monaco,courier,monospace;
+            body, html {
+                height: 100%;
+                position: fixed;
+                left: 0;
+                overflow-y: auto;
+            }
+            .anchor span {
+                color: #fff !important;
+            }
+            .markdown-section p a, .markdown-section li a {
+                font-weight: normal !important;
+                text-decoration: none;
+            }
+            .markdown-section p a:hover, .markdown-section li a:hover {
+                text-decoration: underline;
+            }
+            .markdown-section h1, .markdown-section h2, .markdown-section h3, .markdown-section h4 {
+                color: #fff;
+                font-weight: 500;
+            }
+            .markdown-section strong {
+                color: #fff;
             }
             .app-name-link img {
-                max-width: 200px;
+                max-width: 180px;
             }
             .sidebar > h1 {
-                text-align: left;
-                margin-left: 5px;
+                text-align: center;
             }
             :root {
                 --theme-color: #ff1e54;
@@ -42,22 +64,52 @@
                 position: relative;
                 top: -1px;
             }
+            .sidebar {
+                background-color: #21222c;
+                position: fixed;
+            }
             .sidebar ul li.active>a {
                 font-weight: normal;
             }
+            .sidebar ul li a {
+                color: white;
+            }
             .sidebar ul li a:hover {
                 text-decoration: none;
+            }
+            .sidebar-toggle {
+                background-color: transparent;
+                position: fixed;
+            }
+            .sidebar-toggle .sidebar-toggle-button:hover {
+                opacity: 0.8;
+            }
+            .sidebar-nav a:hover {
+                background-color: #21222c !important;
+                color: #ff1e54;
             }
             .markdown-section pre {
                 overflow: hidden;
                 white-space: pre-wrap;
                 border-radius: 5px;
             }
+            .markdown-section code, .markdown-section pre {
+                background-color: #1d1d25;
+                font-family: Fira Code,Monaco,courier,monospace;
+            }
+            .markdown-section code {
+                color: #ff1e54;
+            }
+            .markdown-section pre>code, .token.punctuation {
+                background-color: #1d1d25;
+                color: #fff;
+                font-family: Fira Code,Monaco,courier,monospace;
+            }
             .app-sub-sidebar li::before {
                 content: '\0029BF' !important;
             }
             .content {
-                padding-top: 0;
+                padding: 20px;
             }
             .cover-main img {
                 max-width: 300px;
@@ -70,23 +122,12 @@
             window.$docsify = {
                 name: 'CodeCheat',
                 repo: 'CodeCheat',
-                coverpage: true,
                 loadSidebar: true,
                 alias: {
                     '/.*/_sidebar.md': '/_sidebar.md',
                 },
                 subMaxLevel: 4,
-                search: 'auto', // default
-                // complete configuration parameters
-                search: {
-                    maxAge: 86400000, // Expiration time, the default one day
-                    paths: 'auto', // or 'auto'
-                    placeholder: 'Type to search',
-                    noData: 'No Results!',
-                    depth: 4, // Headline depth, 1 - 6
-                    hideOtherSidebarContent: false, // whether or not to hide other sidebar content
-                },
-                logo: '/_media/logo.png',
+                logo: 'media/logo-light.png',
                 // docsify-copy-code (defaults)
                 copyCode: {
                     buttonText: 'Copy',
@@ -96,7 +137,6 @@
             }
         </script>
         <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
-        <script src="//unpkg.com/docsify/lib/plugins/search.min.js"></script>
         <script src="//unpkg.com/prismjs/components/prism-bash.min.js"></script>
         <script src="//unpkg.com/prismjs/components/prism-php.min.js"></script>
         <script src="//unpkg.com/prismjs/components/prism-php-extras.min.js"></script>

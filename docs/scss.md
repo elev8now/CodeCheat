@@ -78,5 +78,3 @@ When we come to use our mixins, we use `@include`
 ```scss
 lighten(green, 10%)
 ```
-
-##
