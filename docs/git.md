@@ -92,64 +92,35 @@ Then go to GitHub to see that the change is reflected there.
 
 ## Git Commands
 
-```bash
-git init
-```
 
-initialize (start) git handling in the current directory
+`git init` - initialize (start) git handling in the current directory
 
-```bash
-git remote add origin {repository URL}
-```
 
-add the remote repo location (GitHub)should be SSH version, starting git@github.com...
+`git remote add origin {repository URL}` - add the remote repository location (use the SSH key, starting git@github.com...)
 
-```bash
-git fetch
-```
 
-fetches all branches and revisions, to your local machine
+`git fetch` - fetches all branches and revisions, to your local machine
 
-```bash
-git checkout master
-```
 
-change your project code to the most recent snapshot in the master branch
+`git checkout master` - change your project code to the most recent snapshot in the master branch
 
-```bash
-git add *
-```
 
-adds all files to be version managed
+`git add *` - adds all files to be version managed
 
-```bash
-git add {filename}
-```
 
-add a specific file to be version managed
+`git add {filename}` - add a specific file to be version managed
 
-```bash
-git commit -a -m 'message'
-```
 
-creates a point-in-time snapshot of all changed tracked files (-a), with commit message (-m)
+`git commit -a -m 'message'` - creates a point-in-time snapshot of all changed tracked files (-a), with commit message (-m)
 
-```bash
-git commit -m 'message'
-```
 
-creates a point-in-time snapshot of all files that have been added to staging, with commit message (-m)
+`git commit -m 'message'` - creates a point-in-time snapshot of all files that have been added to staging, with commit message (-m)
 
-```bash
-git status
-```
 
-see what state your files are in
+`git status` - see what state your files are in
 
-```bash
-git rev-parse HEAD
-```
 
-```bash
-git reflog
-```
+`git rev-parse HEAD`
+
+`git reflog`
+
