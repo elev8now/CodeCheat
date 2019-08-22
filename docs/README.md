@@ -11,5 +11,5 @@ CodeCheats provides quick and easy access to coding tips and tricks for multiple
 * [Gulp](gulp.md)
 * [PHP](php.md)
 * [MySQL](mysql.md)
-* [Laravel](Laravel.md)
+* [Laravel](laravel.md)
 * [Terminal](terminal.md)
