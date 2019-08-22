@@ -6,5 +6,5 @@
 * [Gulp](gulp.md)
 * [PHP](php.md)
 * [MySQL](mysql.md)
-* [Laravel](Laravel.md)
+* [Laravel](laravel.md)
 * [Terminal](terminal.md)
