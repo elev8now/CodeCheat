@@ -1,5 +1,7 @@
 # Laravel 
 
+[Download Notes (PDF)](https://github.com/elev8now/CodeCheat/raw/master/docs/assets/DevelopMe_Laravel.pdf)
+
 ## Terminology
 
 **Framework**
