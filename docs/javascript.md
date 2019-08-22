@@ -1,4 +1,4 @@
 # JavaScript
 
-* [JavaScript Fundamentals](assets/DevelopMe_Javascript.pdf)
-* [JavaScript in the Browser](assets/DevelopMe_Javascript_DOM.pdf)
+* [JavaScript Fundamentals](docs/assets/DevelopMe_Javascript.pdf)
+* [JavaScript in the Browser](docs/assets/DevelopMe_Javascript_DOM.pdf)
