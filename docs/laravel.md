@@ -59,6 +59,36 @@
 - PATCH - used to edit data
 - DELETE - used to delete data 
 
+**Controller** 
+- the code (a type of class) that handles the receiving of HTTP requests and sending a response
+
+**Model** 
+- the code that handles putting data in and getting data out of the database
+
+**Migration** 
+- blueprints for the database structure (tables and columns) !! it doesn't hold any content 
+
+**Resource** 
+- a type of class that allows us to control/filter the format of the JSON output when we wrap 
+
+**Mass Assignment Vulnerability** 
+- prevents users from accessing or 'filling' data they're not authorised to access 
+ 
+**Route Model Binding** 
+- this prevents a request being fulfilled if the requested resource does not exist 
+
+**Validation** 
+- provides rules for checking incoming data and gives back relevant error messages  
+
+**Public** 
+- a property or method that is accessible outside the Class it belongs to
+
+**Private** 
+- a property or method that is inaccessible outside of the Class it belongs to 
+
+**Static** 
+- a property or method that belongs to the Class, not the Object instance 
+
 * * *
 
 ## Introduction
@@ -195,10 +225,6 @@ artisan make:model Article -m
 ```
 
 This will create an Article model class (in `app/Article.php`) as well as a database migration (in the `database/migrations` directory).
-
-* * *
-
-### Database Migrations
 
 We'll need to update the migration file to create the structure we'll need to store an article:
 
@@ -580,11 +606,267 @@ protected $middleware = [
 
 * * *
 
-### Key Terms
+### Validation
+
+You should always validate any data that gets submitted to your site, by providing errors and preventing queries when validation criteria is not met. 
+
+`4xx` errors can be dealt with by the client side, `5xx` errors cannot.
+
+To avoid MySQL errors:
+
+- `required`: any database fields that cannot be `null` should have the `required` validation
+- `max:255`: if you're storing data in a `VARCHAR` then make sure you have max length validation that matches the `VARCHAR` length
+- `date`/`integer`/`string`: check formats before inserting into MySQL (you will also need the `nullable` validation if the field is not required)
+
+**Validation Request**
+
+To add validation we need to create Request classes.
+
+Run `artisan make:request ArticleRequest`.
+
+```php
+class ArticleRequest extends FormRequest
+{
+    public function authorize()
+    {
+        return true;
+    }
+
+    public function rules()
+    {
+        return [
+           "title" => ["required", "string", "max:100"],
+           "article" => ["required", "string", "min:50"],
+        ];
+    }
+}
+```
+
+Then update the `Articles` controller to use our validated request instead of the standard `Request` object:
+
+```php
+use App\Http\Requests\ArticleRequest;
+
+// ...
+
+public function store(ArticleRequest $request) { /* ... */ }
+
+// ...
+
+public function update(ArticleRequest $request, Article $article) { /* ... */ }
+```
+
+**Note:** In order to have a nicely formatted error messages in Postman, remember to add a new Header called `Accept` and give it the value `application/json`.
+
+![Postman Header](images/postman-header.png)
+
+If you don't validate the data before it gets to the database, we'll submit incorrect data and the databe will return a 5xx error response, but at this point our  program is broken. We use validaiton to provide an error messagge before our data reaches the database. Think of it like a bouncer, the accepts or rejects data before it even accesses the database. 
+
+
+### Comments
+
+#### One to Many Relationships
+
+We want to store comments on their own table in the database. But we'll need some way of linking a comment to the article that it belongs to.
+
+Each article can have **many** comments, but each comment can only belong to **one** article. For this reason it is called a **one to many** relationship.
+
+We can store this relationship by referencing the ID of the article for each comment we create. That way we will know which article each comment belongs to.
+
+Under the hood, MySQL can really efficiently use this structure to join together related data.
+
+![One to many](images/one-to-many.jpg)
+
+A comment belongs to an article and has an email address and the comment text.
+
+```bash
+artisan make:model Comment -m
+```
+
+```php
+public function up()
+{
+    Schema::create("comments", function (Blueprint $table) {
+        $table->increments("id");
+        $table->string("email", 100);
+        $table->text("comment");
+        $table->timestamps();
+
+        // link up to articles table
+        $table->integer("article_id")->unsigned();
+        $table->foreign("article_id")->references("id")->on("articles")->onDelete("cascade");
+    });
+}
+```
+
+```bash
+artisan migrate
+```
+
+We need to let our articles know that they have a relationship to comments. That way Eloquent can automatically join them together for us.
+
+Let's update our Article model to let it know that it can have comments:
+
+```php
+class Article extends Model
+{
+    // Only allow the title and article field to get updated via mass assignment
+    protected $fillable = ["title", "article"];
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+}
+```
+
+And let's update the Comment model while we're at it:
+
+```php
+class Comment extends Model
+{
+    protected $fillable = ["email", "comment"];
+
+    public function article()
+    {
+        return $this->belongsTo(Article::class);
+    }
+}
+```
+
+We just need to set up a route to capture the comment `post`:
+
+```php
+$router->group(["prefix" => "articles"], function ($router) {
+    ...
+    $router->post("{article}/comments", "Comments@store");
+});
+```
+
+We'll need to create the Comments controller too:
+
+```shell
+artisan make:controller Comments --api
+```
+
+Update the `store` method in the `Comments` controller:
+
+```php
+use App\Article;
+use App\Comment;
+
+class Comments extends Controller
+{
+    public function store(Request $request, Article $article)
+    {
+        $comment = new Comment($request->only(["email", "comment"]));
+
+        // store the comments on the article
+        $article->comments()->save($comment);
+
+        return $comment;
+    }
+}
+```
+
+Now, let's add some comment validation.
+
+```bash
+artisan make:request CommentRequest
+```
+
+```php
+class CommentRequest extends FormRequest
+{
+    public function authorize()
+    {
+        return true;
+    }
+
+    public function rules()
+    {
+        return [
+            "email" => ["required", "email", "max:100"],
+            "comment" => ["required", "string"],
+        ];
+    }
+}
+```
+
+And update the `Comments` controller to use the validated request:
+
+```php
+use App\Http\Requests\CommentRequest;
+
+// ...
+
+public function store(CommentRequest $request, Article $article) { /* ... */ }
+```
+
+Finally, let's list all the comments for an article:
+
+```php
+$router->group(["prefix" => "articles"], function ($router) {
+    ...
+    $router->get("{article}/comments", "Comments@index");
+});
+```
+
+```php
+class Comments extends Controller
+{
+    // ...
+
+    public function index(Article $article)
+    {
+        return $article->comments;
+    }
+}
+```
+
+#### Resource for Comments
+
+Let's create a resource for comments: `artisan make:resource CommentResource`
+
+```php
+public function toArray($request)
+{
+    return [
+        "id" => $this->id,
+        "email" => $this->email,
+        "comment" => $this->comment,
+    ];
+}
+```
+
+And then update our `Comments` controller:
+
+```php
+use App\Http\Resources\CommentResource;
+
+// ...
+
+public function index(Article $article)
+{
+    return CommentResource::collection($article->comments);
+}
+
+public function store(CommentRequest $request, Article $article)
+{
+    // ... store code
+    return new CommentResource($comment);
+}
+```
+
+* * *
+
+## Key Terms
 - **ORM**: Object Relational Mapper - allows us to access data from a database using standard objects
 - **Controller**: a piece of code that is run for a specific route, whose job it is to get/update the relevant data and return a response to the user
 - **Resource**: allows us to control the JSON output of our API
 - **CORS**: cross-origin resource sharing - a safety feature that permits browsers to make requests to APIs on different domains
+- **One to Many**: a relationship between two tables of a database where the items of table A can be linked to many items from table B, but items from table B can only be linked to one item in table A.
+- **Foreign Key**: a relationship between two tables in MySQL that is enforced by the database
 
 * * *
 
@@ -598,3 +880,5 @@ protected $middleware = [
 - [Eloquent](http://laravel.com/docs/5.6/eloquent)
 - [Route Model Binding](https://laravel.com/docs/5.6/routing#route-model-binding)
 - [API Resources](https://laravel.com/docs/5.6/eloquent-resources)
+- [Validation](https://laravel.com/docs/5.6/validation)
+- [Eloquent: One to Many Relationships](http://laravel.com/docs/5.6/eloquent-relationships#one-to-many)

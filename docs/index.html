@@ -15,12 +15,6 @@
                 color: #fff !important;
                 font-size: 14px;
             }
-            body, html {
-                height: 100%;
-                position: fixed;
-                left: 0;
-                overflow-y: auto;
-            }
             .anchor span {
                 color: #fff !important;
             }
@@ -43,9 +37,6 @@
             }
             .sidebar > h1 {
                 text-align: center;
-            }
-            :root {
-                --theme-color: #ff1e54;
             }
             .anchor span,
             body {
@@ -97,6 +88,9 @@
                 background-color: #1d1d25;
                 font-family: Fira Code,Monaco,courier,monospace;
             }
+            .markdown-section code {
+                color: yellowgreen;
+            }
             .markdown-section pre>code, .token.punctuation {
                 background-color: #1d1d25;
                 color: #fff;
@@ -111,6 +105,9 @@
             }
             .cover-main img {
                 max-width: 300px;
+            }
+            img {
+                border-radius: 4px;
             }
         </style>
     </head>
@@ -131,7 +128,8 @@
                     buttonText: 'Copy',
                     errorText: 'Error',
                     successText: 'Copied'
-                }
+                },
+                themeColor: '#ff1e54'
             }
         </script>
         <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
