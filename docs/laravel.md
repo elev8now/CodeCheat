@@ -866,9 +866,9 @@ In this case we need a **pivot table**. The pivot table *just* stores the relati
 
 <img src="img/pivot.png" style="height: 200px; margin-top: 3em;">
 
-Let's add tags to our articles. First, let's create a Tag model: `artisan make:model Tag -m`
+Let's add tags to our articles. First, let's create a Tag model: `artisan make:model Tag -m` 
 
-**You MUST create new database tables for _many-to-many_ relationships in ALPHABETICAL ORDER. E.g. the `article_tag` table that connects the `articles` and `tags` table has to be created before the `tags` table (a < t).**
+**The first letter of a pivot (many-to-many spaghetti) table must begin with a letter sequentially less than the name of the second table. If the two tables we want to connect are `articles` and `tags`, our pivot table should be named `article_tag` NOT `tag_article` to denote the relationship between the two.**
 
 ```php
 public function up()
@@ -894,7 +894,9 @@ public function down()
 }
 ```
 
-We'll need to setup our `Article` model to link to tags:
+We'll need to setup our `Article` model to link to tags. 
+
+When we instantiate the Article Class, we are returned an Article object instance (new article). When we call this method on the Article object instance, we return all tags linked to that article.
 
 ```php
 public function tags()
@@ -902,6 +904,8 @@ public function tags()
     return $this->belongsToMany(Tag::class);
 }
 ```
+
+The belongsToMany() method is used for many-to-many relationships, whereas the hasMany() method is used for one-to-many relationships.
 
 Next, let's update our `Tag` model to include the `articles` relationship:
 
