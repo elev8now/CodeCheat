@@ -852,11 +852,11 @@ public function store(CommentRequest $request, Article $article)
 }
 ```
 
-## Tags
+### Tags
 
 * * *
 
-### Many to Many Relationships
+#### Many to Many Relationships
 
 Tags and articles have a more complex relationship than comments and articles. An article can have any number of tags, but a tag can also belong to any number of articles.
 
@@ -1006,7 +1006,7 @@ public function setTags(Collection $tags)
 
 * * *
 
-## Resource for Tags
+### Resource for Tags
 
 Finally, let's update our article resources to include tags.
 
