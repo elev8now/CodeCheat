@@ -108,9 +108,7 @@
 
 * * *
 
-## Creating an API
-
-### Setup
+## API Setup
 
 We'll need to install the Laravel installer package:
 
@@ -122,7 +120,7 @@ This will allow us to easily create new Laravel projects. You'll only need to ru
 
 * * *
 
-### New Project
+## New Project
 
 To create a new Laravel project run:
 
@@ -162,7 +160,7 @@ Once Vagrant has finished loading visit `http://homestead.test` (or `http://loca
 
 * * *
 
-### Routing
+## Routing
 
 We're already familiar with **routing** from when we did React. The concept is very similar in Laravel: we need to take a URL and use it to determine what we want to do.
 
@@ -179,7 +177,7 @@ $router->post("articles", "Articles@store");
 
 * * *
 
-### Controllers
+## Controllers
 
 In Laravel routes point to **controllers**. It is the controller's job to deal with the request and return a response.
 
@@ -202,7 +200,7 @@ public function store(Request $request)
 
 * * *
 
-### Database Migrations
+## Database Migrations
 
 We'll need to store the articles in a database so that the data is persisted.
 
@@ -210,7 +208,7 @@ Laravel makes it really easy to deal with database structuring using **database 
 
 Database migrations are bits of code that tell the database how it should be structured. These are run by Laravel when we run the `artisan migrate` command. This means anyone with our codebase can easily get their database to have the right structure for the app.
 
-#### Creating a Model/Migration
+### Creating a Model/Migration
 
 On your Vagrant box run:
 
@@ -246,7 +244,7 @@ We should now have an `articles` table in the database.
 
 * * *
 
-### Models
+## Models
 
 The `Article` model **extends** the Eloquent ORM model. This allows us to use the model to interact with the data from the database.
 
@@ -269,7 +267,7 @@ You can read more above models on the [Eloquent ORM Documentation](http://larave
 
 * * *
 
-### Creating
+## Creating
 
 Now we've got somewhere to store the articles, we need to update our controller so that we can create an Article.
 
@@ -300,7 +298,7 @@ Now we can try doing a `POST` request with Postman.
 
 * * *
 
-### Mass Assignment Vulnerability
+## Mass Assignment Vulnerability
 
 If we're not careful we might accidentally allow users to update fields that they should have access to. Laravel guards against this by default.
 
@@ -324,7 +322,7 @@ Now try doing a `POST` request with Postman.
 
 * * *
 
-### Listing
+## Listing
 
 Next let's setup the `GET` request to `/articles`.
 
@@ -348,7 +346,7 @@ That's all there is to it: Laravel does all the hard work for us once we've setu
 
 * * *
 
-### Reading
+## Reading
 
 Next we want to add a route for `GET` to something like `/articles/1`.
 
@@ -376,7 +374,7 @@ public function show($id)
 
 * * *
 
-### Editing
+## Editing
 
 Next we'll add editing. We'll need a `PUT` route for `/articles/{article}`.
 
@@ -411,7 +409,7 @@ public function update(Request $request, $id)
 
 * * *
 
-### Deleting
+## Deleting
 
 Finally, let's add a `DELETE` route.
 
@@ -439,7 +437,7 @@ public function destroy($id)
 
 * * *
 
-### Route Model Binding
+## Route Model Binding
 
 What if we try to update `/articles/34849`? Currently we'll get a 500 error as there is no article with ID 34849.
 
@@ -469,7 +467,7 @@ Less code and more functionality. Laravel is your friend.
 
 * * *
 
-### Resources
+## Resources
 
 It would also be good if we had some control over how our data comes back. For example when we're listing the articles we probably don't want to send the full article text and when we might not want to send the `created_at` and `updated_at` properties.
 
@@ -558,7 +556,7 @@ As we're returning a collection of articles rather than a single article we use 
 
 * * *
 
-### CORS
+## CORS
 
 Finally, we need to make sure our API will work with our Redux app.
 
@@ -600,7 +598,7 @@ protected $middleware = [
 
 * * *
 
-### Validation
+## Validation
 
 You should always validate any data that gets submitted to your site, by providing errors and preventing queries when validation criteria is not met. 
 
@@ -657,9 +655,9 @@ public function update(ArticleRequest $request, Article $article) { /* ... */ }
 If you don't validate the data before it gets to the database, we'll submit incorrect data and the databe will return a 5xx error response, but at this point our  program is broken. We use validaiton to provide an error messagge before our data reaches the database. Think of it like a bouncer, the accepts or rejects data before it even accesses the database. 
 
 
-### Comments
+## Comments
 
-#### One to Many Relationships
+### One to Many Relationships
 
 We want to store comments on their own table in the database. But we'll need some way of linking a comment to the article that it belongs to.
 
@@ -818,7 +816,7 @@ class Comments extends Controller
 }
 ```
 
-#### Resource for Comments
+### Resource for Comments
 
 Let's create a resource for comments: `artisan make:resource CommentResource`
 
@@ -852,11 +850,11 @@ public function store(CommentRequest $request, Article $article)
 }
 ```
 
-### Tags
+## Tags
 
 * * *
 
-#### Many to Many Relationships
+### Many to Many Relationships
 
 Tags and articles have a more complex relationship than comments and articles. An article can have any number of tags, but a tag can also belong to any number of articles.
 
@@ -1028,6 +1026,243 @@ public function toArray($request)
     ];
 }
 ```
+
+* * *
+
+## Authentication
+
+### Learning Objectives
+- Understand how an API authenticates requests
+- Be able to setup Laravel Passport to handle request authentication
+- Update your API to authenticate routes in different ways
+
+### Key Language
+- Authentication
+- Access Token
+
+APIs typically use tokens to authenticate users. The process is as follows:
+- The user makes a request to a dedicated authentication endpoint, providing credentials such as username and password
+- The API checks whether these credentials are valid
+- If valid, the API returns a token that is unique to the user
+- The user makes all future requests supplying this token in the header
+- The API checks the validity of the token
+- The API grants or denies requests based on whether the user is valid and who the user is
+
+### Installation
+
+View the [online documentation](https://laravel.com/docs/5.8/passport#installation) for this process, or follow the simplified notes below. 
+
+Install Laravel Passport
+```bash
+composer require laravel/passport
+```
+
+Create database tables to store access tokens in (vagrant ssh). The Passport migrations will create the tables your application needs to store clients and access tokens:
+```bash
+artisan migrate
+```
+
+Install Laravel Passport. This command will create the encryption keys needed to generate secure access tokens. In addition, the command will create "personal access" and "password grant" clients which will be used to generate access tokens:
+```bash
+artisan passport:install
+```
+
+Make a note of the password grant Client ID and Client Secret that are returned following successful installation. These look something like:
+```bash
+...
+Password grant client created successfully.
+Client ID: 2
+Client secret: QtE4syo8QFwvw4bMEK5Ej2zaJ3jgF3RYmF1JjZmU
+```
+
+In App/User.php add the HasApiTokens trait. This trait will provide a few helper methods to your model which allow you to inspect the authenticated user's token and scopes:
+```php
+use Laravel\Passport\HasApiTokens;
+...
+
+class User extends Authenticatable
+{
+    use HasApiTokens, Notifiable;
+    ...
+}
+```
+
+In AuthServiceProvider.php use the Passport class to add all necessary routes to your app. This saves you having to write them yourself.  
+```php
+use Laravel\Passport\Passport;
+...
+class AuthServiceProvider extends ServiceProvider
+{
+	...
+	public function boot()
+    {
+    	...
+    	Passport::routes();
+    }
+}
+```
+
+Finally, in config/auth.php config file, set the driver of the api authentication guard to 'passport'.
+```php
+'guards' => [
+    ...
+
+    'api' => [
+        'driver' => 'passport',
+        'provider' => 'users',
+    ],
+],
+```
+
+If you're only using Laravel to create an API (no front end), you will need to change the default guard to `api` rather than `web`. 
+
+```bash
+'defaults' => [
+    'guard' => 'api',
+    'passwords' => 'users',
+],
+```
+
+Create a single user on the command line...
+```bash
+artisan tinker
+App\User::create(array('name' => 'An Author', 'email' => 'an.author@gmail.com', 'password' => Hash::make('password')));
+```
+
+You should now be able to make a request in Postman to POST `http://homestead.test/oauth/token` with the body:  
+```php
+{
+	"grant_type": "password",
+	"client_id": "<your_client_id>",
+	"client_secret": "<your_client_secret>",
+	"username": "an.author@gmail.com",
+	"password": "password"
+}
+```
+If everything is setup correctly, the token that gets returned can be stored then sent as a Bearer Token with each following request.
+
+### Simple authentication
+
+If a valid access token is sufficient authentication, Laravel provides some simple methods. In `routes/api.php`:
+
+#### Single route
+Add the `auth:api` middleware to any routes that require a valid access token:
+```php
+$router->get("", "Articles@index")->middleware('auth:api');
+```
+Try calling `GET http://homestead.test/api/articles` in Postman (remember to add the header `Accept: application/json`). You should get a 401 response.
+
+This time choose `Bearer Token` in the Authorization tab and paste in the access token you got back from the `oauth/token` endpoint. Your request should now authenticate successfully and return the usual response.
+
+![](images/bearertoken.png)
+
+#### Groups
+To add authentication to the entire group:  
+```php
+$router->group(["prefix" => "articles", "middleware" => ["auth:api"]], function ($router) {
+	...
+}
+```
+
+### More complex authentication
+In reality our blog api probably needs different levels of authentication. Posts should be open to anyone, only the owner of the blog should be able to write and edit blog posts, and only logged in users should be able to comment.
+
+This suggests two user roles - `Author` and `Subscriber`.
+
+#### Modify Users table
+We'll need to modify the Users table to be able to store the user role.
+```bash
+artisan make:migration modify_users_table
+```
+
+In the generated migration file, add your new column in the up() method, and drop it in the down() method:
+```php
+class ModifyUsersTable extends Migration
+{
+    public function up()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('role')->after('name')->default('subscriber');
+        });
+    }
+
+    public function down()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('role');
+        });
+    }
+}
+```
+
+```bash
+artisan migrate
+```
+
+We'll need to update our Users model to make this new column fillable.
+```php
+class User extends Model
+{
+    protected $fillable = ['name', 'email', 'password', 'role'];
+}
+```
+
+Now let's update our existing user to have the role of `'author'` and generate a new user with the role `'subscriber'`.
+
+```bash
+artisan tinker
+App\User::where('id', 1)->update(['role' => 'author']);
+App\User::create(array('name' => 'A Subscriber', 'role' => 'subscriber', 'email' => 'a.subscriber@gmail.com', 'password' => Hash::make('password')));
+```
+
+#### Checking user role
+Laravel provides a simple way for us to check who is making the request. In the `authorize()` method on the FormRequest classes that we extended, `$this->user()` will return an instance of User associated with the token sent with the request.  
+
+Let's create a new request for storing articles:
+```bash
+artisan make:request ArticleStoreRequest
+```
+
+The `rules()` method should return the same validation as ArticleRequest:
+```php
+public function rules()
+{
+    return [
+        "title" => ["required", "string", "max:100"],
+        "article" => ["required", "string"]
+    ];
+}
+```
+
+But let's write a conditional outcome in the `authorize()` method:  
+```php
+public function authorize()
+{
+    return $this->user()['role'] === 'author';
+}
+```
+
+We'll need to tell the `store()` method in Articles.php to use this new Request:
+```php
+use App\Http\Requests\ArticleStoreRequest;
+
+class Articles extends Controller
+{
+    ...
+    public function store(ArticleStoreRequest $request)
+    {
+        ...
+    }
+}
+```
+
+In Postman, make a call to `POST /oauth/token`, supplying the body as before, replacing the user details with the subscriber we generated above. Make a call to `POST /api/articles` suppling the returned access token as a the Bearer Token. Your request should receive a 403 response. Replace the token with your author token. This should authenticate and a new Article should be returned.
+
+### Extension Tasks
+- Validate comment routes so that only subscribers and authors can comment
+- Authenticate update and delete routes so that only the writer of the article/comment etc. should be able to edit it. (Hint: you'll need to set up a relationship between Users and Articles)
+- Add another role of `admin` and generate an admin user. Admins should be able to do everything on the site, including deleting comments and articles that they didn't write.
+- Extend your API providing endpoints for users to sign up to your blog
 
 * * *
 
