@@ -181,7 +181,7 @@ $router->post("articles", "Articles@store");
 
 In Laravel routes point to **controllers**. It is the controller's job to deal with the request and return a response.
 
-Run the following inside your Vagrant box<sup>†</sup> to create an Articles controller:
+Run the following inside your Vagrant box to create an Articles controller. You will need to ssh into the vagrant box `vagrant ssh` then navigate into the code directory `cd code`:
 
 ```shell
 artisan make:controller Articles --api
