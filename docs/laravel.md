@@ -1266,6 +1266,403 @@ In Postman, make a call to `POST /oauth/token`, supplying the body as before, re
 
 * * *
 
+## Learning Objectives
+- Understand an overview of how a project is setup on a server
+- Be able to follow a process to host a Laravel project on an AWS EC2
+- Be able to reason about what you are doing
+
+## Key Language
+- SSH
+- SSH keys
+- Linux
+- Apache
+- Mysql
+- PHP
+- Composer
+- Git
+- AWS
+- EC2
+- Virtual server
+- HTTP
+
+## Overview
+There are many ways to deploy your Laravel API - many of them highly automated, efficient and pain free. Even though it's a slighly more involved process, we're going to use an AWS Linux server for the following reasons:
+- It's free (up to a point)
+- It looks and feels like your Vagrant box
+- It can be setup to use the same stack as your Vagrant box
+
+### What is AWS?
+AWS (Amazon Web Services) provide a dizzying array of cloud-computing services on a pay as you go basis. These include computing, storage, networking, databases... The most popular of these include Elastic Cloud Computing (EC2) and Simple Storage Service (S3).
+
+### What is EC2
+Elastic Cloud Computing is a service that allows you to spin up virtual computers to deploy your applications, rather than having to invest in hardware. They are elastic as they can be configured to scale up or down depending on traffic.
+
+### SSH
+Overview of how local machine, server and Git repository are connected and can communicate.
+
+## Deployment
+### Prerequisites
+- An AWS account
+- An EC2 SSH key pair  
+
+To create an EC2 SSH key pair follow the instructions in [this document](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair) (make sure you create it in your home region (e.g. EU-London):
+
+### Launching your server
+- Login to AWS, go to EC2, make sure you’re on the EU London region (top right of the nav).
+- Launch Instance
+- Choose - Amazon Linux AMI 2018.03.0 (HVM), SSD Volume Type - ami-01419b804382064e4
+- Choose - T2.micro
+- Go to Add tags - Add tag - `key=Name value=my-server-name` (this is so you can identify it in the dashboard)
+- Go to Configure Security Group - Add rule and select HTTP. This enables the sending and receiving of data via HTTP.
+- Click Launch
+- Select your existing keypair
+- Go back to the EC2 dashboard and you should see this server loading up
+
+### Accessing your server
+
+SSH into your server
+````
+ssh username@domain.of.your.instance
+````
+
+For an amazon linux instance the username is ec2-user and the domain can be found by clicking on your instance in the EC2 dashboard and copying the Public DNS (IPv4). It should something look like this:
+````
+ssh ec2-user@ec2-3-8-39-24.eu-west-2.compute.amazonaws.com
+````
+
+Sidenote: If the ssh-key-pair you’ve used to authenticate with diverges from the usual id_rsa naming you can specify the exact name of your key pair using the `-i` flag.
+````
+ssh -i ~/.ssh/aws-key-pair.pem ec2-user@ec2-3-8-125-57.eu-west-2.compute.amazonaws.com
+````
+
+#### Install server dependencies
+- Apache - HTTP server software
+- Mysql - database management system
+- PHP - programming language
+- Git - file management
+- Composer - php package manager
+- SSH keys - for authentication
+- Apache, PHP, Mysql and Git
+
+Update yum (used for installing linux packages)
+````
+sudo yum update -y
+````
+Install Apache, PHP and mysql
+````
+sudo yum install -y httpd24 php72 mysql56-server php72-mysqlnd
+````
+Install a php package used by Laravel
+````
+sudo yum install php72-mbstring
+````
+Install git
+````
+sudo yum install git
+````
+Install Composer
+````
+cd ~
+sudo curl -sS https://getcomposer.org/installer | sudo php
+sudo mv composer.phar /usr/local/bin/composer
+sudo ln -s /usr/local/bin/composer /usr/bin/composer
+````
+Start apache and configure it so it always starts on boot
+````
+sudo service httpd start
+sudo chkconfig httpd on
+````
+Sense Check! Checkout your server in the browser (in the EC2 dashboard - copy the Public DNS (IPv4)). You should see an Apache test page.
+
+### Ownership
+
+By default, your files are served from the folder `/var/www/html`. This is like your public folder in a vagrant box.
+
+Try creating a file in /var/www/html:
+````
+cd /var/www/html
+touch index.html
+````
+
+You should get the message `touch: cannot touch ‘index.html’: Permission denied`.
+
+This is because, by default, all files on the server are owned by the root user. 
+Let’s take ownership of this folder so that we can make changes:
+````
+sudo chown -R ec2-user /var/www/html/
+````
+
+Create an index page on your server
+````
+touch index.html
+````
+Open the file in a code editor
+````
+nano index.html
+````
+Add 
+````
+<h1>hello world</h1>
+````
+then `ctrl+x` and save.
+
+Sense Check! Checkout your server in the browser. This should now read Hello World. This is because your browser looks for an index.html file on your server and serves it up.
+
+Remove the index.html file
+````
+rm index.html
+````
+
+### Deploy files to the server using Git
+
+How does git know that the server requesting access to the repo is authorised? Just as you have ssh keys on your machine and with a matching public key in Github, your server needs the same.
+
+#### Generate keys on your server instance
+Create a key on the server (substitute the email for the best email to contact you on. This helps your successor when they come to clean up random keys left on the server).
+````
+ssh-keygen -t rsa -b 4096 -C "<your_email_address>"
+````
+Hit enter at all prompts
+
+You should now be able to see this key pair in the folder
+````
+cd ~/.ssh && ls
+````
+
+Start ssh agent
+````
+eval "$(ssh-agent -s)"
+````
+Add private key to ssh-agent
+````
+ssh-add ~/.ssh/id_rsa
+````
+View your public key
+````
+cat ~/.ssh/id_rsa.pub
+````
+Select the output and copy to the clipboard
+
+#### Upload the key to github
+
+In github, go to top right profile picture, click settings, in side bar click SSH and GPG keys, new ssh key, paste in key and give a sensible title about where this lives, such as the name of the server.
+
+You should now be able to connect to git from the server
+
+#### Copy your repository to the server
+On your repository, go to clone or download and, as usual, copy the code (ensure it says clone with SSH)
+````
+cd /var/www/html
+git init
+git remote add origin git@github.com:your-name/repo-name.git
+git fetch
+git checkout master
+sudo composer install
+````
+If you get an error message to say you’ve run out of memory, try stopping apache, run composer again then restart apache
+````
+sudo service httpd stop
+sudo composer install
+sudo service httpd start
+````
+#### Laravel specific steps
+
+Go back to the page in the browser, you should still see the apache test page - why is this? Your laravel project is actually served out of the public folder, whereas your server is setup to look for an index page at /var/www/html. So, we need to tell the server where the project root is.
+
+Open the Apache config file in a text editor
+````
+sudo nano /etc/httpd/conf/httpd.conf
+````
+
+Scroll down to document root and change it to
+````
+DocumentRoot "/var/www/html/public"
+````
+And
+````
+# Further relax access to the default document root:
+<Directory "/var/www/html/public">
+	…
+	AllowOverride All
+````
+
+Reboot apache
+````
+sudo service httpd restart
+````
+
+Sense check: check out the page in your browser. The apache test message should have disappeared and everything should be broken. Congratulations, we have made progress!
+
+
+You are missing your .env file with your laravel key in there. Create a new .env file and paste the contents of your existing .env into it.
+````
+sudo nano /var/www/html/.env
+````
+Exit and save.
+
+Sense check: check out the page in your browser. The page should now display a Laravel error message. This is because Laravel writes logs about it’s activity. All of the files in /var/www/html belong to you, so Apache is unable to write into the logs.
+
+Give Apache permission to write in this folder
+````
+setfacl -R -m u:apache:rwX storage/
+sudo chmod -R 777 storage/*
+````
+
+Sense check: check out the page in your browser. You should now see the laravel homepage!
+
+### Setting up the database
+
+#### Setup Mysql
+Start mysql client
+````
+sudo service mysqld start
+````
+
+Set password and configure MySQL (remember this for later putting in Laravel's `.env` file)
+````
+sudo mysql_secure_installation
+````
+
+- Press enter when asked about the current password
+- Type Y to set a new password and enter and re-enter to confirm
+- Answer Y to all further questions
+
+Get mysql to start at every boot
+````
+sudo chkconfig mysqld on
+````
+Access mysql
+````
+mysql -u root -p
+````
+
+````
+mysql > create database laravel
+mysql > exit
+````
+
+#### Setup Laravel
+Update your .env file with the details of your database (the name of the database and password you created as well as changing user to root)
+````
+sudo nano .env
+````
+
+Populate database details (replace password):
+````
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD={PASSWORD FROM MYSQL SETUP EARLIER}
+````
+
+Setup app key (populated in `.env`):
+
+```
+php artisan key:generate
+```
+
+Use artisan to build your database
+````
+php artisan migrate
+````
+
+Sidenote: If you encounter issues with maximum key length exceeded you can override this in app/Provider/AppServiceProvider.php.
+
+````
+sudo nano /var/www/html/app/Providers/AppServiceProvider.php
+````
+
+Add the following code to the top of the file
+````
+use Illuminate\Support\Facades\Schema;
+````
+Add the following code in the boot method
+````
+public function boot()
+{
+    Schema::defaultStringLength(191);
+}
+````
+In Mysql delete the database and start again
+````
+mysql -u root -p
+````
+````
+mysql > drop database laravel
+mysql > create database laravel
+mysql > exit
+````
+Use artisan migrate your database again.
+````
+php artisan migrate
+````
+Success everything is setup!! You should now be able to make calls to your API.
+
+## HTTPS & SSL Certificates
+
+HTTPS = SECURE HTTP and is a good security choice, and often required, especially if your front-end (React app?) is on HTTPS too.
+
+First step, we'll need to set up a real domain to point to our server. If you don't have one to use ask Oli to set you up a something.developme.space one.
+
+We install `certbot-auto` on our AWS EC2 instance, which we can use to have SSL certificates issued for us, with:
+
+```
+wget https://dl.eff.org/certbot-auto
+chmod a+x certbot-auto
+```
+
+Then we issue a certificate (replace `YOUR.DOMAIN` with actual domain without `http://` or `https://` or any trailing slashes):
+
+`sudo ./certbot-auto --debug -v --server https://acme-v01.api.letsencrypt.org/directory certonly -d YOUR.DOMAIN`
+
+Choose option 3 for how to verify and enter path `/var/www/html/public` as your web root.
+
+Next we create a new Apache configuration file so we can configure requests to `https://YOUR.DOMAIN` to use this certificate.
+
+First:
+```
+sudo nano /etc/httpd/conf.d/vhost.conf
+```
+
+Then enter contents below, replacing the *four* instances of `YOUR.DOMAIN` below with your actual domain without `http://` or `https://` or any trailing slashes:
+
+```
+<VirtualHost *:80>
+        ServerName YOUR.DOMAIN
+	
+	# redirect all traffic to the HTTPS version (port 443)
+        RewriteEngine on
+        RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+</VirtualHost>
+
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+        ServerName YOUR.DOMAIN
+
+        DocumentRoot /var/www/html/public
+
+        <IfModule mod_dir.c>
+            DirectoryIndex index.php index.pl index.cgi index.html index.xhtml index.htm
+        </IfModule>
+
+        Include /etc/letsencrypt/options-ssl-apache.conf
+        SSLCertificateFile /etc/letsencrypt/live/YOUR.DOMAIN/fullchain.pem
+        SSLCertificateKeyFile /etc/letsencrypt/live/YOUR.DOMAIN/privkey.pem
+</VirtualHost>
+</IfModule>
+```
+
+Enable TLS support by installing the Apache module mod_ssl:
+
+`sudo yum install -y mod24_ssl`
+
+Finally restart Apache to use new configuration with:
+
+`sudo service httpd restart`
+
+For reference, here is AWS's guide on [SSL on AMI instances](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/SSL-on-amazon-linux-ami.html).
+
+* * *
+
 ## Key Terms
 - **ORM**: Object Relational Mapper - allows us to access data from a database using standard objects
 - **Controller**: a piece of code that is run for a specific route, whose job it is to get/update the relevant data and return a response to the user

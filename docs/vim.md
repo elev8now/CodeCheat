@@ -1,8 +1,9 @@
-# Vim Cheat Sheet
-Vim cheat sheet, useful commands compatible with `vscodevim` for Microsoft Visual Studio Code.
-
+## Commands
+Vim commands are formed from a combination of verbs and targets.The targets could be objects (words, sentences, paragraphs, lines, the contents of parentheses) or movements (jump to end of word, jump to end of paragraph, jump forward until the letter ‘e’, etc).
+Forming objects generally involves the use of a modifier. You can also add a count to perform the action count times.
 
 | Verbs | Use | 
+| --- | --- |
 | - | - | 
 | v | visual |
 | c | change |
@@ -17,7 +18,7 @@ Vim cheat sheet, useful commands compatible with `vscodevim` for Microsoft Visua
 | p | paste the buffer after the cursor |
 | P | paste the buffer before the cursor |
 | r | replace the character under the cursor with [char] |
-| s | deletes the character under the curser and puts you into insert mode |
+| s | deletes the character under the cursor and puts you into insert mode |
 | x | delete the character under the cursor |
 | u | undo the last command |
 | a | append - enter insert mode after the carat | 
@@ -27,7 +28,7 @@ Vim cheat sheet, useful commands compatible with `vscodevim` for Microsoft Visua
 
 
 | Modifiers | Use | 
-| - | - |
+| --- | --- |
 | i | inside |
 | a | around |
 | t | till..finds a character |
@@ -35,7 +36,7 @@ Vim cheat sheet, useful commands compatible with `vscodevim` for Microsoft Visua
 | / | search..find a string/regex |
 
 | Text objects | Use | 
-| - | - |
+| --- | --- |
 | w | word |
 | s | sentence |
 | p | paragraph |
@@ -47,7 +48,7 @@ Vim cheat sheet, useful commands compatible with `vscodevim` for Microsoft Visua
 ## Useful
 
 | Command | Use | 
-| - | - | 
+| --- | --- |
 |vi[char]| visualize all content inside that cahracters excluding delimiter |
 |va[char]| visualize all content inside that cahracters including delimiter |
 | vi{ | select all content inside curly braces excluding braces |
@@ -68,7 +69,7 @@ Vim cheat sheet, useful commands compatible with `vscodevim` for Microsoft Visua
 ## Verbs
 
 | Command | Use | 
-| - | - | 
+| --- | --- |
 | ciw | change inner word will change the whole word under the cursor |
 | cw | change the word from the current cursor position |
 | / | enter regex search mode |
@@ -86,7 +87,7 @@ Vim cheat sheet, useful commands compatible with `vscodevim` for Microsoft Visua
 Nouns or movements are commands for moving within the document or representing an area within a document.
 
 | Command | Use | 
-| - | - | 
+| --- | --- |
 | h, j, k, l | equivalent to the arrow keys left, down, up, right |
 | H | move to top of screen |
 | M | move to middle of screen |
@@ -267,3 +268,5 @@ Move to the end of the line in normal mode in VIM: Jump to last non blank `g_` o
  g~~  : Invert case to entire line
 
  guG : Change to lowercase until the end of document.
+
+ J joins the line the cursor is on with the line below.
