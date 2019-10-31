@@ -4,7 +4,6 @@ Forming objects generally involves the use of a modifier. You can also add a cou
 
 | Verbs | Use | 
 | --- | --- |
-| - | - | 
 | v | visual |
 | c | change |
 | d | delete (remove from the document and put in buffer) |
@@ -17,7 +16,7 @@ Forming objects generally involves the use of a modifier. You can also add a cou
 | V | enter visual line (selects the current line in one key stroke) |
 | p | paste the buffer after the cursor |
 | P | paste the buffer before the cursor |
-| r | replace the character under the cursor with [char] |
+| r | replace the character under the cursor with \[char\] |
 | s | deletes the character under the cursor and puts you into insert mode |
 | x | delete the character under the cursor |
 | u | undo the last command |
@@ -49,8 +48,8 @@ Forming objects generally involves the use of a modifier. You can also add a cou
 
 | Command | Use | 
 | --- | --- |
-|vi[char]| visualize all content inside that cahracters excluding delimiter |
-|va[char]| visualize all content inside that cahracters including delimiter |
+|vi\[char\]| visualize all content inside that cahracters excluding delimiter |
+|va\[char\]| visualize all content inside that cahracters including delimiter |
 | vi{ | select all content inside curly braces excluding braces |
 | va{ | select all content inside curly braces including braces |
 | viw | select world under the cursor |
@@ -106,13 +105,13 @@ Nouns or movements are commands for moving within the document or representing a
 | W, B | as w/b only Words are bigger |
 | ), ( | move to the next/previous sentence |
 | }, { | move to the next/previous paragraph |
-| /[regexp] | like t but instead of finding a character it finds a regexp |
+| /\[regexp\] | like t but instead of finding a character it finds a regexp |
 | % | jump to the matching parenthesis (vim understands nested parenthesis) |
 | _ | move to the current line (useful for making commands line-based) |
-| #[char] | jump to the previous instance of the word under [char] |
+| #\[char\] | jump to the previous instance of the word under \[char\] |
 | >> | indent line |
 | << | outdent line |
-| *[char] | jump to the next instance of the word under [char] |
+| *\[char\] | jump to the next instance of the word under \[char\] |
 | ddp / ddkP | are common commands to move a line one down / up |
 
 
